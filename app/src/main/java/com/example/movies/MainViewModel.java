@@ -1,4 +1,4 @@
-package com.example.moviesjava;
+package com.example.movies;
 
 import android.app.Application;
 import android.util.Log;
