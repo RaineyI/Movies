@@ -20,6 +20,19 @@ import java.util.List;
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewHolder> {
 
     private List<Movie> movies = new ArrayList<>();
+    private OnReachAndListener onReachAndListener;
+
+    private OnMovieClickListener onMovieClickListener;
+
+    public void setOnReachAndListener(OnReachAndListener onReachAndListener) {
+        this.onReachAndListener = onReachAndListener;
+    }
+
+    public void setOnMovieClickListener(OnMovieClickListener onMovieClickListener) {
+        this.onMovieClickListener = onMovieClickListener;
+    }
+
+    private static final String URL_NO_POSTER = "https://st.kp.yandex.net/images/no-poster.gif";
 
     public void setMovies(List<Movie> movies) {
         this.movies = movies;
@@ -39,13 +52,23 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
 
     @Override
     public void onBindViewHolder(@NonNull MovieViewHolder holder, int position) {
+
         Movie movie = movies.get(position);
-        Glide.with(holder.itemView)
-                .load(movie.getPoster().getUrl())
-                .into(holder.imageViewPoster);
+
+        Poster poster = movie.getPoster();
+        if (poster != null) {
+            Glide.with(holder.itemView)
+                    .load(movie.getPoster().getUrl())
+                    .into(holder.imageViewPoster);
+        } else {
+            Glide.with(holder.itemView)
+                    .load(URL_NO_POSTER)
+                    .into(holder.imageViewPoster);
+        }
+
         double rating = movie.getRating().getRating();
         int backgroundId;
-        if(rating > 7) {
+        if (rating > 7) {
             backgroundId = R.drawable.circle_green;
         } else if (rating > 5) {
             backgroundId = R.drawable.circle_orange;
@@ -56,6 +79,20 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
         Drawable background = ContextCompat.getDrawable(holder.itemView.getContext(), backgroundId);
         holder.textViewRating.setBackground(background);
         holder.textViewRating.setText(String.format("%.1f", movie.getRating().getRating()));
+
+        if(position >= movies.size() - 10 && onReachAndListener != null) {
+            onReachAndListener.onReachAnd();
+        }
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(onMovieClickListener != null) {
+                    onMovieClickListener.onMovieClick(movie);
+                }
+            }
+        });
+
     }
 
     @Override
@@ -63,8 +100,16 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
         return movies.size();
     }
 
-    static class MovieViewHolder extends RecyclerView.ViewHolder {
 
+    interface OnReachAndListener {
+        void onReachAnd();
+    }
+
+    interface OnMovieClickListener {
+        void onMovieClick(Movie movie);
+    }
+
+    static class MovieViewHolder extends RecyclerView.ViewHolder {
         private final ImageView imageViewPoster;
         private final TextView textViewRating;
 

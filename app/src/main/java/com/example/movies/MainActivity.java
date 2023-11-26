@@ -6,14 +6,18 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     private MainViewModel viewModel;
+    private ProgressBar progressBarLoading;
     private RecyclerView recyclerViewMovies;
     private MoviesAdapter moviesAdapter;
 
@@ -21,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        recyclerViewMovies = findViewById(R.id.recyclerViewMovies);
+        initViews();
         moviesAdapter = new MoviesAdapter();
         recyclerViewMovies.setAdapter(moviesAdapter);
         recyclerViewMovies.setLayoutManager(new GridLayoutManager(this, 2));
@@ -34,6 +38,34 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        viewModel.loadMovies();
+        viewModel.getIsLoading().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isLoading) {
+                if(isLoading) {
+                    progressBarLoading.setVisibility(View.VISIBLE);
+                } else {
+                    progressBarLoading.setVisibility(View.GONE);
+                }
+
+            }
+        });
+        moviesAdapter.setOnMovieClickListener(new MoviesAdapter.OnMovieClickListener() {
+            @Override
+            public void onMovieClick(Movie movie) {
+                Intent intent = MovieDetailActivity.newIntent(MainActivity.this, movie);
+                startActivity(intent);
+            }
+        });
+        moviesAdapter.setOnReachAndListener(new MoviesAdapter.OnReachAndListener() {
+            @Override
+            public void onReachAnd() {
+                viewModel.loadMovies();
+            }
+        });
+    }
+
+    private void initViews() {
+        recyclerViewMovies = findViewById(R.id.recyclerViewMovies);
+        progressBarLoading = findViewById(R.id.progressBarLoading);
     }
 }
