@@ -54,7 +54,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
     public void onBindViewHolder(@NonNull MovieViewHolder holder, int position) {
 
         Movie movie = movies.get(position);
-
         Poster poster = movie.getPoster();
         if (poster != null) {
             Glide.with(holder.itemView)

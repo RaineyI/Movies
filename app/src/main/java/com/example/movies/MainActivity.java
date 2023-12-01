@@ -46,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     progressBarLoading.setVisibility(View.GONE);
                 }
-
             }
         });
         moviesAdapter.setOnMovieClickListener(new MoviesAdapter.OnMovieClickListener() {
