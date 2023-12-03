@@ -88,10 +88,6 @@ public class MovieDetailActivity extends AppCompatActivity {
         });
         viewModel.loadReviews(movie.getId());
 
-        MovieDao movieDao = MovieDatabase.getInstance(getApplication()).movieDao();
-        movieDao.insertMovie(movie)
-                .subscribeOn(Schedulers.io())
-                .subscribe();
     }
 
     private void initViews() {
