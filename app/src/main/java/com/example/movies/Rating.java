@@ -7,20 +7,23 @@ import java.io.Serializable;
 public class Rating implements Serializable {
 
     @SerializedName("kp")
-    private double ratingKp;
+    private double rating;
 
     public Rating(double rating) {
-        this.ratingKp = rating;
+        this.rating = rating;
+    }
+    public double getRating() {
+        return rating;
     }
 
-    public double getRating() {
-        return ratingKp;
+    public void setKp(double kp) {
+        this.rating = kp;
     }
 
     @Override
     public String toString() {
         return "Rating{" +
-                "kp='" + ratingKp + '\'' +
+                "kp='" + rating + '\'' +
                 '}';
     }
 }
