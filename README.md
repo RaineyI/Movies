@@ -6,7 +6,7 @@ Android application for searching and exploring movies.
 The app utilizes the [Kinopoisk API](https://kinopoisk.dev/) to fetch movie data.
 
 ### Tech Stack
-* Kotlin
+* Java
 * XML
 * Room Database
 * Retrofit
